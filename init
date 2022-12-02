@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+echo "Init today"
+mkdir today
+cp -r template/* today

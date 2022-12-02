@@ -1,4 +1,4 @@
-import { readInput } from "../util/file.ts";
+import { readInput, run } from "../util/starter.ts";
 
 function parseInput() {
   return readInput().split("\n");
@@ -64,5 +64,23 @@ function part2() {
   return input.map(transform).map(score).reduce((a, b) => a + b);
 }
 
-console.log("part1", part1());
-console.log("part2", part2());
+run({
+  part1: {
+    tests: [
+      // {
+      //   input: ``,
+      //   expected: "",
+      // },
+    ],
+    solution: part1,
+  },
+  part2: {
+    tests: [
+      // {
+      //   input: ``,
+      //   expected: "",
+      // },
+    ],
+    solution: part2,
+  },
+});
