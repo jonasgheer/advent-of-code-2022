@@ -1,4 +1,5 @@
 import { run } from "../util/starter.ts";
+import outdent from "https://deno.land/x/outdent@v0.8.0/mod.ts";
 
 function parseInput(rawInput: string) {
   return rawInput;
