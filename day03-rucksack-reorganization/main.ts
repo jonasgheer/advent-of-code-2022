@@ -1,10 +1,11 @@
-import { readInput, run } from "../util/starter.ts";
+import { run } from "../util/starter.ts";
 import { intersect } from "https://deno.land/std@0.167.0/collections/intersect.ts";
 import { sum } from "https://deno.land/x/sum/mod.ts";
 import { chunk } from "https://deno.land/std@0.167.0/collections/chunk.ts";
+import outdent from "https://deno.land/x/outdent@v0.8.0/mod.ts";
 
-function parseInput() {
-  return readInput().split("\n").map((line) => line.split(""));
+function parseInput(rawInput: string) {
+  return rawInput.split("\n").map((line) => line.split(""));
 }
 
 function priority(item: string): number {
@@ -13,8 +14,8 @@ function priority(item: string): number {
     : item.charCodeAt(0) - 96;
 }
 
-function part1() {
-  const input = parseInput().map(
+function part1(rawInput: string) {
+  const input = parseInput(rawInput).map(
     (line) => [line.slice(0, line.length / 2), line.slice(line.length / 2)],
   );
 
@@ -23,8 +24,8 @@ function part1() {
   );
 }
 
-function part2() {
-  const input = parseInput();
+function part2(rawInput: string) {
+  const input = parseInput(rawInput);
   return sum(
     chunk(input, 3).map((group) => intersect(...group)).map((r) =>
       priority(r[0])
@@ -34,21 +35,27 @@ function part2() {
 
 run({
   part1: {
-    tests: [
-      // {
-      //   input: ``,
-      //   expected: "",
-      // },
-    ],
+    test: {
+      input: outdent`vJrwpWtwJgWrhcsFMMfFFhFp
+      jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+      PmmdzqPrVvPwwTWBwg
+      wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+      ttgJtRGJQctTZtZT
+      CrZsJsPPZsGzwwsLwLmpwMDw`,
+      expected: 157,
+    },
     solution: part1,
   },
   part2: {
-    tests: [
-      // {
-      //   input: ``,
-      //   expected: "",
-      // },
-    ],
+    test: {
+      input: outdent`vJrwpWtwJgWrhcsFMMfFFhFp
+      jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+      PmmdzqPrVvPwwTWBwg
+      wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+      ttgJtRGJQctTZtZT
+      CrZsJsPPZsGzwwsLwLmpwMDw`,
+      expected: 70,
+    },
     solution: part2,
   },
 });
