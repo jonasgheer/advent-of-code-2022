@@ -51,14 +51,14 @@ function parseInput(rawInput: string): Map<string, Dir> {
       if (cmd === "cd") {
         if (name === "..") {
           currentNode = currentNode?.parent;
-        } else if (dirs.has(name)) {
-          const node = dirs.get(name)!;
-          if (node instanceof File) {
-            throw new Error(`should be Dir: ${node.name}, ${node.size}`);
-          }
-          currentNode = node;
+        } else if (name === "/") {
+          currentNode = root;
         } else {
-          currentNode = new Dir(name, currentNode);
+          const child = currentNode?.content.find((c) => c.name === name);
+          if (child instanceof File) {
+            throw new Error("should be Dir");
+          }
+          currentNode = child;
         }
       } // else ls continue
     } else {
