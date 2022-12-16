@@ -23,6 +23,27 @@ function parseCmd(cmd: string) {
   return [cmdList[1], cmdList[2]];
 }
 
+function getDirs(node: Dir): Dir[] {
+  const dirs: Dir[] = [];
+  const stack: Node[] = [node];
+  while (stack.length > 0) {
+    const current = stack.pop()!;
+    if (current instanceof Dir) {
+      stack.push(...current.content);
+      dirs.push(current);
+    }
+  }
+  return dirs;
+}
+
+function dirSizes(root: Dir): number[] {
+  const sizes = [];
+  for (const dir of getDirs(root)) {
+    sizes.push(size(dir));
+  }
+  return sizes;
+}
+
 function size(node: Dir): number {
   let total = 0;
   const stack: Node[] = [node];
@@ -38,10 +59,8 @@ function size(node: Dir): number {
   return total;
 }
 
-function parseInput(rawInput: string): Map<string, Dir> {
+function parseInput(rawInput: string): Dir {
   const root: Node = new Dir("/");
-
-  const dirs: Map<string, Dir> = new Map([["/", root]]);
 
   const lines = rawInput.split("\n").slice(1);
   let currentNode: Dir | undefined = root;
@@ -76,44 +95,31 @@ function parseInput(rawInput: string): Map<string, Dir> {
           currentNode,
         );
         currentNode?.content.push(dir);
-        dirs.set(lineList[1], dir);
       }
     }
   }
 
-  return dirs;
+  return root;
 }
 
-// ls -> takewhile not $
-
-// interface File {
-//   name: string;
-//   size: number;
-// }
-
-// interface Dir {
-//   name: string;
-//   content: Node[];
-// }
-
 function part1(rawInput: string) {
-  const input = parseInput(rawInput);
+  const root = parseInput(rawInput);
 
-  const sizes = [];
-  for (const node of input.values()) {
-    sizes.push(size(node));
-  }
-  console.log(sizes);
-
-  console.log(sizes.filter((s) => s <= 100_000));
+  const sizes = dirSizes(root);
 
   return sum(sizes.filter((s) => s <= 100_000));
 }
 
 function part2(rawInput: string) {
-  const input = parseInput(rawInput);
+  const root = parseInput(rawInput);
 
-  return;
+  const sizes = dirSizes(root);
+
+  sizes.sort((a, b) => a - b);
+
+  const totalUsed = sizes.at(-1)!; // root
+
+  return sizes.find((size) => (70_000_000 - totalUsed + size) > 30_000_000);
 }
 
 run({
@@ -147,10 +153,32 @@ run({
     solution: part1,
   },
   part2: {
-    // test: {
-    //   input: outdent``,
-    //   expected: "",
-    // },
+    test: {
+      input: outdent`$ cd /
+      $ ls
+      dir a
+      14848514 b.txt
+      8504156 c.dat
+      dir d
+      $ cd a
+      $ ls
+      dir e
+      29116 f
+      2557 g
+      62596 h.lst
+      $ cd e
+      $ ls
+      584 i
+      $ cd ..
+      $ cd ..
+      $ cd d
+      $ ls
+      4060174 j
+      8033020 d.log
+      5626152 d.ext
+      7214296 k`,
+      expected: 24933642,
+    },
     solution: part2,
   },
 });
